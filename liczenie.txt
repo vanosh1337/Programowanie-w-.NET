@@ -1,0 +1,231 @@
+using System;
+//import przestrzeni nazw system.
+//model
+public interface WybranaFigura //definicja interfejsu z metodami.
+    {
+        double ObliczObwod();   //2x metody
+        double ObliczPole();
+    }
+
+public class Prostokat : WybranaFigura
+    {
+    public double Szerokosc { get; set; } //load właściwości prostokata
+    public double Wysokosc { get; set; }
+
+    public Prostokat(double szerokosc, double wysokosc) //konstruktor inicjalizujacy wartości user'a
+    {
+        Szerokosc = szerokosc; //2x wartosci
+        Wysokosc = wysokosc;
+    }
+
+    public double ObliczObwod() //implementacja metody 1 "obliczajacej obwod"
+    {
+        return 2 * (Szerokosc + Wysokosc);
+    }
+
+    public double ObliczPole() //implementacja metody 2 "obliczajacej pole"
+    {
+        return Szerokosc * Wysokosc;
+    }
+    }
+
+public class Kolo : WybranaFigura
+    {
+    public double Promien { get; set; } //load właściwości koła
+
+    public Kolo(double promien) //konstruktor inicjalizujacy wartości user'a w tym przypadku koła
+    {
+        Promien = promien;
+    }
+
+    public double ObliczObwod() //implementacja metody 1 "obliczajacej obwod"
+    {
+        return 2 * Math.PI * Promien; //w tym miejscu użycie wzoru 2 x PI x promien
+    }
+
+    public double ObliczPole() //implementacja metody 2 "obliczajacej pole"
+    {
+        return Math.PI * Promien * Promien; //w tym miejscu użycie wzoru PI x promien x promien
+    }
+    }
+
+public class Trapez : WybranaFigura
+    {
+    public double Podstawa_Dolna { get; set; }  //load właściwości trapezu
+    public double Podstawa_Gorna { get; set; }
+    public double Wysokosc { get; set; }
+    public double Bok1 { get; set; }
+    public double Bok2 { get; set; }
+
+    public Trapez(double podstawa_dolna, double podstawa_gorna, double wysokosc, double bok1, double bok2) //konstruktor inicjalizujacy wartości user'a w tym przypadku trapez
+    {
+        Podstawa_Dolna = podstawa_dolna;
+        Podstawa_Gorna = podstawa_gorna;
+        Wysokosc = wysokosc;
+        Bok1 = bok1;
+        Bok2 = bok2;
+    }
+
+    public double ObliczObwod() //implementacja metody 1 "obliczajacej obwod"
+    {
+        return Podstawa_Dolna + Podstawa_Gorna + Bok1 + Bok2; //długość wszystkich boków
+    }
+
+    public double ObliczPole() //implementacja metody 2 "obliczajacej pole"
+    {
+        return ((Podstawa_Dolna + Podstawa_Gorna) * Wysokosc) / 2; //zastosowanie wzoru
+    }
+    }
+
+public class TrojkatRownoramienny : WybranaFigura
+    {
+    public double Podstawa { get; set; } //load właściwości tojkata
+    public double Bok { get; set; }
+    public double Wysokosc { get; set; }
+    
+    //konstruktor inicjalizujacy wartości user'a w tym przypadku trojkat
+    public TrojkatRownoramienny(double podstawa, double bok, double wysokosc)
+    {
+        Podstawa = podstawa;
+        Bok = bok;
+        Wysokosc = wysokosc;
+    }
+
+    public double ObliczObwod() //implementacja metody 1 "obliczajacej obwod"
+    {
+        return Podstawa + (2 * Bok);
+    }
+
+    public double ObliczPole() //implementacja metody 2 "obliczajacej pole"
+    {
+        return (Podstawa * Wysokosc) / 2;
+    }
+    }
+
+//kontroler
+public interface IUzytkownikInterfejsu
+    {
+        void Wyswietl(); //wyświetlenie interfejsu user'a
+    }
+
+//klasyczny interfejs konsolowy
+public class KonsolaUI : IUzytkownikInterfejsu
+    {
+    private WybranaFigura _figura;
+
+    public KonsolaUI(WybranaFigura figura)
+    {
+        _figura = figura; //inicjalizacja
+    }
+
+    public void Wyswietl() //wyswietlanie komunikacji z userem
+    {
+        Console.WriteLine($"Obwod > {_figura.ObliczObwod()}"); //wyswietla obwód
+        Console.WriteLine($"Pole > {_figura.ObliczPole()}"); //wyswietla pole
+    }
+    }
+
+//przykładowa implementacja interfejsu graficznego
+public class GraficznyUI : IUzytkownikInterfejsu
+    {
+    private WybranaFigura _figura;
+
+    public GraficznyUI(WybranaFigura figura)
+    {
+        _figura = figura;
+    }
+
+    public void Wyswietl()
+    {
+        // Wyświetlanie szczegółów figury w postaci graficznej
+        // można ukazać dane użytkownikowi przy pomocy pól tekstowych lub wybór figury na buttonach.
+        // Zastosowanie tej implementacji szerzej łączyłoby się z modyfikacją kodu,
+        // a przede wszystkim dostosowaniem go do interfejsu graficznego i interakcji user'a.
+        Console.WriteLine("moznaby tu zastosować wyswietlanie graficzne");
+    }
+    }
+
+//poczatkowe odpalenie programu
+public class Program
+    {
+    public static void Main(string[] args)
+    {
+        Console.WriteLine("--------------------"); //menu tekstowe
+        Console.WriteLine("-- Wybierz figure --");
+        Console.WriteLine("--------------------");
+        Console.WriteLine(" >> prostokat ------");
+        Console.WriteLine(" >> okrag ----------");
+        Console.WriteLine(" >> trapez ---------");
+        Console.WriteLine(" >> trojkat --------");
+        Console.WriteLine("--------------------");
+        string wybor = Console.ReadLine();
+
+        IUzytkownikInterfejsu userInterface;
+
+        if (wybor.ToLower() == "prostokat") //wybor prostokata
+        {
+            Console.WriteLine("Wybrales prostokat! ");
+            Console.WriteLine("Podaj jego szerokosc");
+            double width = Convert.ToDouble(Console.ReadLine()); //odczyt z readlina
+
+            Console.WriteLine("Podaj jego wysokosc ");
+            double height = Convert.ToDouble(Console.ReadLine());  //odczyt z readlina
+
+            WybranaFigura prostokat = new Prostokat(width, height); 
+            userInterface = new KonsolaUI(prostokat);
+        }
+        else if (wybor.ToLower() == "okrag") //wybor okregu
+        {
+            Console.WriteLine("Wybrales okrag! ");
+            Console.WriteLine("Podaj jego promien ");   //odczyt z readlina \/
+            double radius = Convert.ToDouble(Console.ReadLine()); // ewentualnie math.round
+
+            WybranaFigura okrag = new Kolo(radius);
+            userInterface = new KonsolaUI(okrag);
+        }
+        else if (wybor.ToLower() == "trapez") //wybor trapezu
+        {
+            Console.WriteLine("Wybrales trapez! ");
+            Console.WriteLine("Podaj jego podstawe dolna ");
+            double podstawa1 = Convert.ToDouble(Console.ReadLine()); //odczyt danych
+
+            Console.WriteLine("Podaj jego podstawe gorna ");
+            double podstawa2 = Convert.ToDouble(Console.ReadLine()); //odczyt danych
+
+            Console.WriteLine("Podaj jego wysokosc ");
+            double wysokosc = Convert.ToDouble(Console.ReadLine()); //odczyt danych
+
+            Console.WriteLine("Podaj jego dlugosc lewego boku ");
+            double bok1 = Convert.ToDouble(Console.ReadLine()); //odczyt danych
+
+            Console.WriteLine("Podaj jego dlugosc prawego boku ");
+            double bok2 = Convert.ToDouble(Console.ReadLine()); //odczyt danych
+
+            WybranaFigura trapez = new Trapez(podstawa1, podstawa2, wysokosc, bok1, bok2);
+            userInterface = new KonsolaUI(trapez);
+        }
+        else if (wybor.ToLower() == "trojkat") //wybor trojkata
+        {   
+            Console.WriteLine("Wybrales trojkat! ");
+            Console.WriteLine("Podaj jego podstawe ");
+            double baseLength = Convert.ToDouble(Console.ReadLine()); //odczyt danych
+
+            Console.WriteLine("Podaj jego dlugosc boku ");
+            double side = Convert.ToDouble(Console.ReadLine()); //odczyt danych
+
+            Console.WriteLine("Podaj jego wysokosc ");
+            double height = Convert.ToDouble(Console.ReadLine()); //odczyt danych
+
+            WybranaFigura trojkat = new TrojkatRownoramienny(baseLength, side, height);
+            userInterface = new KonsolaUI(trojkat);
+        }
+        else
+        {
+            Console.WriteLine("Nie znam takiej figury :("); //error, nie rozpoznano figury
+            Console.WriteLine("Sprobuj ponownie!"); 
+            return;
+        }
+        // wybór interfejsu
+        userInterface.Wyswietl();
+    }
+    }
